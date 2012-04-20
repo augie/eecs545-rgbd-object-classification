@@ -1,7 +1,6 @@
 package eecs545;
 
-import java.util.Collection;
-import java.util.Map;
+import java.util.List;
 
 /**
  *
@@ -9,13 +8,5 @@ import java.util.Map;
  */
 public abstract class Classifier {
 
-    public int label;
-
-    public Classifier(int label) {
-        this.label = label;
-    }
-
-    public abstract void train(Collection<Input> inputs);
-
-    public abstract Results test(Collection<Input> inputs);
+    public abstract void train(List<Input> inputs) throws Exception;
 }

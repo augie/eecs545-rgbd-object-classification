@@ -14,9 +14,10 @@ import org.apache.commons.io.IOUtils;
  * 
  * @author Augie
  */
-public class RunExperiment {
+public class RunLOOBinaryExperiment {
 
-    public static final int REPETITIONS = 1000;
+    public static final int REPETITIONS = 1;
+    public static final int MIN_TRAINING_EXAMPLES = 25;
 
     public static void main(String[] args) throws Exception {
         if (args.length != 2) {
@@ -62,10 +63,10 @@ public class RunExperiment {
             inputsByLabel.get(input.label).add(input);
         }
         // Print out the # of objects assigned each label
-        System.out.println("# objects per label (at least 15 objects):");
+        System.out.println("# objects per label (at least " + MIN_TRAINING_EXAMPLES + " examples):");
         for (int label : inputsByLabel.keySet()) {
             int count = inputsByLabel.get(label).size();
-            if (count >= 15 && label != 0) {
+            if (count >= MIN_TRAINING_EXAMPLES && label != 0) {
                 testLabels.add(label);
                 System.out.println(" " + label + ": " + count);
             }
@@ -78,10 +79,17 @@ public class RunExperiment {
             // Repeat the experiment multiple times
             for (int i = 0; i < REPETITIONS; i++) {
                 // # of iterations = inputs size
-                Results totalResults = new Results(label);
+                BinaryResults totalResults = new BinaryResults(label);
+                File outFile = new File(outDir, "l" + label + "_r" + i + ".txt");
+                if (outFile.exists()) {
+                    System.out.println("Skipping");
+                    continue;
+                }
                 for (int it = 0; it < inputs.size(); it++) {
-                    // Choose a classifier to run
-                    Classifier c = new RandomGuessClassifier(label);
+//                    // Choose a classifier to run
+//                    Classifier c = new RandomGuessClassifier(label);
+//                    Classifier c = new KNNClassifier(label, 1);
+                    BinaryClassifier c = new EnsembleBinarySVMClassifier(label);
                     // Copy the inputs list
                     List<Input> trainingSet = new LinkedList<Input>();
                     trainingSet.addAll(inputs);
@@ -94,8 +102,8 @@ public class RunExperiment {
                     testingSet.add(leaveOut);
                     totalResults.combine(c.test(testingSet));
                 }
-                // Write out the resultsof this training/testing
-                totalResults.write(new File(outDir, "l" + label + "_r" + i + ".txt"));
+                // Write out the results of this training/testing
+                totalResults.write(outFile);
             }
         }
     }

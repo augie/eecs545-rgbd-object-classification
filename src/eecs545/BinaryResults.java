@@ -11,16 +11,16 @@ import org.apache.commons.io.IOUtils;
  *
  * @author Augie
  */
-public class Results {
+public class BinaryResults {
 
     public int label;
     public Map<Input, Boolean> classifications = new HashMap<Input, Boolean>();
 
-    public Results(int label) {
+    public BinaryResults(int label) {
         this.label = label;
     }
 
-    public void combine(Results results) {
+    public void combine(BinaryResults results) {
         if (results.label == label) {
             classifications.putAll(results.classifications);
         }
@@ -63,8 +63,8 @@ public class Results {
             out.println(confusionMatrix[0] + " " + confusionMatrix[1] + " " + confusionMatrix[2] + " " + confusionMatrix[3]);
             // Print the expected and actual classifications
             for (Input input : classifications.keySet()) {
-                // scene id, obj id, really this label, classified whether this label
-                out.println(input.scene + " " + input.object + " " + (input.label == label) + " " + classifications.get(input));
+                // scene id, obj/seg id, really this label, classified whether this label
+                out.println(input.scene + " " + input.objectOrSegment + " " + (input.label == label) + " " + classifications.get(input));
             }
         } finally {
             try {

@@ -35,6 +35,18 @@ public class MathUtils {
             Arrays.fill(m[i], v);
         }
     }
+    
+    public static void fill(double[][][] m, double v) {
+        for (int i = 0; i < m.length; i++) {
+            fill(m[i], v);
+        }
+    }
+    
+    public static void fill(double[][][][] m, double v) {
+        for (int i = 0; i < m.length; i++) {
+            fill(m[i], v);
+        }
+    }
 
     public static void copy(double[][] from, double[][] to) {
         for (int i = 0; i < from.length; i++) {
